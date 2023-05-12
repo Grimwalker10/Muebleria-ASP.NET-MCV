@@ -1,0 +1,260 @@
+﻿@model CapaEntidad.MUEB_USUARIO
+
+@{
+    ViewBag.Title = "EMPLEADOX";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="index.html">Resumen</a></li>
+    <li class="breadcrumb-item active">Usuarios</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-users me-1"></i> Lista de Usuarios
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+            </div>
+        </div>
+        <hr />
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Tipo de Documento</th>
+                    <th>Número de Documento</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Telefono Residencial</th>
+                    <th>Célular</th>
+                    <th>Dirección</th>
+                    <th>Ciudad</th>
+                    <th>Departamento</th>
+                    <th>Pais</th>
+                    <th>Profesion</th>
+
+
+
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Empleado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body g-2">
+
+                <input id="txtid" type="hidden" value="0"/>
+
+
+
+                <!-- CREAR EMPLEADO  -------------------------------------------------CAMBIAR-->
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="txtTipoDocumento" class="form-label">Tipo de Documento</label>
+                        <input type="text" class="form-control" id="txtTipoDocumento">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtNumeroDocumento" class="form-label">Número de Documento</label>
+                        <input type="number" class="form-control" id="txtNumeroDocumento">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="txtNombre">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtApellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="txtApellido">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtTelefono" class="form-label">Telefono Residencial</label>
+                        <input type="number" class="form-control" id="txtTelefono">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtCelular" class="form-label">Célular</label>
+                        <input type="number" class="form-control" id="txtCelular">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtDireccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="txtDireccion">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtCiudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="txtCiudad">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtDepartamento" class="form-label">Departamento</label>
+                        <input type="text" class="form-control" id="txtDepartamento">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtPais" class="form-label">Pais</label>
+                        <input type="text" class="form-control" id="txtPais">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtProfesion" class="form-label">Profesion</label>
+                        <input type="text" class="form-control" id="txtProfesion">
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@section scripts{
+  
+
+
+
+    <script>
+
+        var tabladata;
+
+      
+
+        tabladata = $("#tabla").DataTable({
+            responsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarUsuarios", "Home")',
+                type: "GET",
+                datatype: "json"
+            },
+            "columns": [
+                { "data": "USU_TIPO_DOC" },
+                { "data": "USU_NO_DOC_PK" },
+                { "data": "USU_NOMBRE" },
+                { "data": "USU_APELLIDO" },
+                { "data": "USU_TELEFONO_RES" },
+                { "data": "USU_TELEFONO_CEL" },
+                { "data": "USU_DIRECCION" },
+                { "data": "USU_CIUDAD" },
+                { "data": "USU_DEPTO" },
+                { "data": "USU_PAIS" },
+                { "data": "USU_PROFESION" },
+
+                {
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar">  <i class="fas fa-pen me-1"></i> </button>' +
+                        '<button type="button" class="btn btn-danger btn-sm ms-2">  <i class="fas fa-trash me-1"></i> </button>',
+                    "orderable": false,
+                    "searchable": false,
+                    "width":"90px"
+
+            }
+            ]
+
+
+
+        });
+
+        function abrirModal(json) {
+            $("#txtNumeroDocumento").val(0);
+            $("#txtTipoDocumento").val("");
+            $("#txtNombre").val("");
+            $("#txtApellido").val("");
+            $("#txtTelefono").val("");
+            $("#txtCelular").val("");
+            $("#txtDireccion").val("");
+            $("#txtCiudad").val("");
+            $("#txtDepartamento").val("");
+            $("#txtPais").val("");
+            $("#txtProfesion").val("");
+
+            if (json != null) {
+                $("#txtNumeroDocumento").val("json.USU_NO_DOC_PK");
+                $("#txtTipoDocumento").val("json.USU_TIPO_DOC");
+                $("#txtNombre").val("json.USU_NOMBRE");
+                $("#txtApellido").val("json.USU_APELLIDO");
+                $("#txtTelefono").val("json.USU_TELEFONO_RES");
+                $("#txtCelular").val("json.USU_TELEFONO_CEL");
+                $("#txtDireccion").val("json.USU_DIRECCION");
+                $("#txtCiudad").val("json.USU_CIUDAD");
+                $("#txtDepartamento").val("json.USU_DEPTO");
+                $("#txtPais").val("json.USU_PAIS");
+                $("#txtProfesion").val("json.USU_PROFESION");
+
+
+            }
+
+            $("#FormModal").modal("show");
+        }
+
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+
+            var filaSeleccionada = $(this).closest("tr");
+
+            var data = tabladata.row(filaSeleccionada).data();
+
+            abrirModal(data)
+        })
+
+        function Guardar() {
+            var Usuario = {
+                USU_NO_DOC_PK: $("#txtNumeroDocumento").val(),
+                USU_TIPO_DOC: $("#txtTipoDocumento").val(),
+                USU_NOMBRE: $("#txtNombre").val(),
+                USU_APELLIDO: $("#txtApellido").val(),
+                USU_TELEFONO_RES: $("#txtTelefono").val(),
+                USU_TELEFONO_CEL: $("#txtCelular").val(),
+                USU_DIRECCION: $("#txtDireccion").val(),
+                USU_CIUDAD: $("#txtCiudad").val(),
+                USU_DEPTO: $("#txtDepartamento").val(),
+                USU_PAIS: $("#txtPais").val(),
+                USU_PROFESION: $("#txtProfesion").val(),
+
+            }
+            if (Usuario.USU_NO_DOC_PK == 0) {
+
+                tabladata.row.add(Usuario).draw(false);
+
+                /*Aca estoy intentando decirle que si tiene algun campo vacio que de error --------REVISAR
+                if (Usuario.USU_NOMBRE == null) {
+                    alert("Falta un valor")
+                }*/
+
+            } else {
+                tabladata.row(filaSeleccionada).data(Usuario).draw(false);
+            }
+            $("#FormModal").modal("hide");
+
+        }
+       
+
+
+    </script>
+}
