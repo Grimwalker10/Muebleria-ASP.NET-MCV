@@ -11,7 +11,7 @@ namespace CapaDatos
     public class Conexion
     {
 
-        public string connectionString = "Data Source=localhost ;User ID= LOSALPESBD;Password= 123456;";
+        public string connectionString = "DATA SOURCE=localhost:1521/orcl1;PASSWORD=12345;USER ID=LOSALPESBD;";
 
     }
 }
