@@ -13,7 +13,7 @@ using System.Web.Services.Description;
 
 namespace CapaPresentacionAdmin.Controllers
 {
-
+    [Authorize] //Hace que no se muestren las vistan si no esta autorizado.
     public class HomeController : Controller
     {
         //public string connectionString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.20)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=xe)));User Id=LOSALPESBD;Password=123456;";

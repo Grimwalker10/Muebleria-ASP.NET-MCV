@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace CapaPresentacionAdmin.Controllers
 {
+    [Authorize] //Hace que no se muestren las vistan si no esta autorizado.
     public class MantenedorController : Controller
     {
         // GET: Mantenedor

@@ -11,7 +11,7 @@ namespace CapaDatos
     public class Conexion
     {
 
-        public string connectionString = "Data Source=localhost ;User ID= LOSALPESBD;Password= 123456;";
+        public  static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["dbOracle"].ConnectionString;
 
     }
 }
