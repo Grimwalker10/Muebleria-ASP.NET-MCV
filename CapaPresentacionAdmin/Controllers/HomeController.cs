@@ -9,6 +9,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using CapaNegocio;
 using CapaEntidad;
+using CapaDatos;
 using System.Web.Services.Description;
 
 namespace CapaPresentacionAdmin.Controllers
@@ -32,69 +33,15 @@ namespace CapaPresentacionAdmin.Controllers
             ViewBag.Title = "EMPLEADOX";
             return View();
         }
+
         [HttpGet]
-
-
-        /*METODO PARA LISTAR USUAIROS*/
-        public List<MUEB_USUARIO> Listar(MUEB_USUARIO entidad)
-        {
-            List<MUEB_USUARIO> lista = new List<MUEB_USUARIO>();
-            /*Creo que aca falta un select------------------------------------------------------------------------------------*/
-            try
-            {
-                using (OracleConnection con = new OracleConnection(connectionString))
-                {
-                    con.ConnectionString = connectionString;
-                    con.Open();
-                    using (OracleCommand cmd = con.CreateCommand())
-                    {
-                        cmd.CommandText = "ListarUsuarios";
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Connection = con;
-                        cmd.Parameters.Add(new OracleParameter("USU_TIPO_DOC", entidad.USU_TIPO_DOC));
-                        cmd.Parameters.Add(new OracleParameter("USU_NO_DOC_PK", entidad.USU_NO_DOC_PK));
-                        cmd.Parameters.Add(new OracleParameter("USU_NOMBRE", entidad.USU_NOMBRE));
-                        cmd.Parameters.Add(new OracleParameter("USU_APELLIDO", entidad.USU_APELLIDO));
-                        cmd.Parameters.Add(new OracleParameter("USU_TELEFONO_RES", entidad.USU_TELEFONO_RES));
-                        cmd.Parameters.Add(new OracleParameter("USU_TELEFONO_CEL", entidad.USU_TELEFONO_CEL));
-                        cmd.Parameters.Add(new OracleParameter("USU_DIRECCION", entidad.USU_DIRECCION));
-                        cmd.Parameters.Add(new OracleParameter("USU_CIUDAD", entidad.USU_CIUDAD));
-                        cmd.Parameters.Add(new OracleParameter("USU_DEPTO", entidad.USU_DEPTO));
-                        cmd.Parameters.Add(new OracleParameter("USU_PAIS", entidad.USU_PAIS));
-                        cmd.Parameters.Add(new OracleParameter("USU_PROFESION", entidad.USU_PROFESION));
-                        cmd.Parameters.Add(new OracleParameter("USU_CORREO", entidad.USU_CORREO));
-                        cmd.Parameters.Add(new OracleParameter("USU_CLAVE", entidad.USU_CLAVE));
-                        cmd.Parameters.Add(new OracleParameter("USU_TIPO", entidad.USU_TIPO));
-                        cmd.Parameters.Add(new OracleParameter("USU_DETALLE_TIPO", entidad.USU_DETALLE_TIPO));
-                        cmd.Parameters.Add(new OracleParameter("USU_PUESTO", entidad.USU_PUESTO));
-                        cmd.Parameters.Add(new OracleParameter("USU_SUELDO", entidad.USU_SUELDO));
-
-
-
-
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        return lista;
-                    }
-                }
-
-            }
-            catch (Exception error)
-            {
-
-                throw error;
-            }
-
-        }
-
-
-
         public JsonResult ListarUsuarios(MUEB_USUARIO entidad)
         {
 
             List<MUEB_USUARIO> oLista = new List<MUEB_USUARIO>();
             oLista = new CN_Usuarios().Listar();
 
-            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            return Json(new {data = oLista}, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -107,7 +54,7 @@ namespace CapaPresentacionAdmin.Controllers
 
             try
             {
-                using (OracleConnection con = new OracleConnection(connectionString)) /*Aca intente ponerlo desde oracle, no se si sea asi*/
+                using (OracleConnection con = new OracleConnection(Conexion.connectionString)) /*Aca intente ponerlo desde oracle, no se si sea asi*/
                 {
                     OracleCommand cmd = new OracleCommand("PA_INS_EMPLEADO", con);
 
@@ -144,7 +91,10 @@ namespace CapaPresentacionAdmin.Controllers
                      cmd.Parameters.Add("USU_PAIS", OracleDbType.Varchar2).Value = obj.USU_PAIS;
                      cmd.Parameters.Add("USU_PROFESION", OracleDbType.Varchar2).Value = obj.USU_PROFESION;*/
 
-
+                    //Ejecuta el COMMIT para no tener los datos en la ram y se reflejen en la base de datos.                  
+                        OracleCommand cmdCommit = new OracleCommand("COMMIT", con);
+                        cmdCommit.ExecuteNonQuery();
+                    
 
                 }
 
@@ -169,7 +119,7 @@ namespace CapaPresentacionAdmin.Controllers
 
             try
             {
-                using (OracleConnection con = new OracleConnection(connectionString)) /*Aca intente ponerlo desde oracle, no se si sea asi*/
+                using (OracleConnection con = new OracleConnection(Conexion.connectionString)) /*Aca intente ponerlo desde oracle, no se si sea asi*/
                 {
                     OracleCommand cmd = new OracleCommand("PA_UPD_EMPLEADO", con);/*Aca llamo al procedimiento almacenado*/
 
@@ -206,7 +156,9 @@ namespace CapaPresentacionAdmin.Controllers
                      cmd.Parameters.Add("USU_PAIS", OracleDbType.Varchar2).Value = obj.USU_PAIS;
                      cmd.Parameters.Add("USU_PROFESION", OracleDbType.Varchar2).Value = obj.USU_PROFESION;*/
 
-
+                    //Ejecuta el COMMIT para no tener los datos en la ram y se reflejen en la base de datos.                  
+                    OracleCommand cmdCommit = new OracleCommand("COMMIT", con);
+                    cmdCommit.ExecuteNonQuery();
 
                 }
 
