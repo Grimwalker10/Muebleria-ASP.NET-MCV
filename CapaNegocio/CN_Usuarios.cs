@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-
+using System.Linq;
 using CapaDatos;
 using CapaEntidad;
 
@@ -14,6 +13,63 @@ namespace CapaNegocio
             return objCapaDato.Listar();
 
         }
+
+
+        public int Registrar(MUEB_USUARIO obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if(string.IsNullOrEmpty(obj.USU_TIPO_DOC) || string.IsNullOrEmpty(obj.USU_NOMBRE) || string.IsNullOrEmpty(obj.USU_DIRECCION) || string.IsNullOrEmpty(obj.USU_CIUDAD) 
+                || string.IsNullOrEmpty(obj.USU_DEPTO) || string.IsNullOrEmpty(obj.USU_PAIS) || string.IsNullOrEmpty(obj.USU_PROFESION) || string.IsNullOrEmpty(obj.USU_CORREO) ||
+                string.IsNullOrEmpty(obj.USU_CLAVE))
+            {
+                Mensaje = "No se ha podido crear el nuevo usuario";
+                return 0;
+            }
+            if(Listar().Any(u => u.USU_NO_DOC_PK == obj.USU_NO_DOC_PK))
+            {
+                Mensaje = "No se ha podido crear el nuevo usuario";
+                return 0;
+            }
+            else
+            {
+                string clave = "default123";
+                obj.USU_CLAVE = CN_Recursos.ConvertirSha256(clave);
+                return objCapaDato.Registrar(obj, out Mensaje);
+            }
+
+
+        }
+
+        public bool Editar(MUEB_USUARIO obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+            if (string.IsNullOrEmpty(obj.USU_TIPO_DOC) || string.IsNullOrEmpty(obj.USU_NOMBRE) || string.IsNullOrEmpty(obj.USU_DIRECCION) || string.IsNullOrEmpty(obj.USU_CIUDAD)
+                || string.IsNullOrEmpty(obj.USU_DEPTO) || string.IsNullOrEmpty(obj.USU_PAIS) || string.IsNullOrEmpty(obj.USU_PROFESION) || string.IsNullOrEmpty(obj.USU_CORREO) ||
+                string.IsNullOrEmpty(obj.USU_CLAVE))
+            {
+                Mensaje = "No se ha podido editar el empleado";
+                
+            }
+            if (string.IsNullOrEmpty(Mensaje))
+            {
+                return objCapaDato.Editar(obj, out Mensaje);
+            }
+            else
+            {
+                Mensaje = "No se ha podido crear empleado";
+                return false;
+            }
+
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return objCapaDato.Eliminar(id, out Mensaje);
+        }
+
+
+
 
 
         public bool CambiarClave(int idusuario, string nuevaclave, out string Mensaje)

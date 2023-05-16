@@ -16,35 +16,41 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+                <button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
             </div>
         </div>
+
         <hr />
+        <div class="table-responsive">
+            <table id="tabla" class="table table-striped table-bordered table-condensed" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Número de Documento</th>
+                        <th>Tipo de Documento</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Telefono Residencial</th>
+                        <th>Célular</th>
+                        <th>Dirección</th>
+                        <th>Ciudad</th>
+                        <th>Departamento</th>
+                        <th>Pais</th>
+                        <th>Profesion</th>
+                        <th>Sueldo</th>
+                        <th>Correo</th>
+                        <th>Contraseña</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
 
-        <table id="tabla" class="display cell-border" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Número de Documento</th>
-                    <th>Tipo de Documento</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Telefono Residencial</th>
-                    <th>Célular</th>
-                    <th>Dirección</th>
-                    <th>Ciudad</th>
-                    <th>Departamento</th>
-                    <th>Pais</th>
-                    <th>Profesion</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-
-        </table>
+            </table>
+        </div>
 
     </div>
 </div>
-
 
 
 <!-- Modal -->
@@ -57,61 +63,84 @@
             </div>
             <div class="modal-body g-2">
 
-                <input id="txtid" type="hidden" value="0" />
-
-
-
+                <input id="txtIdEmpleado" type="text" value="0" />
                 <!-- CREAR EMPLEADO  -------------------------------------------------CAMBIAR-->
-                <div class="row">
+                <div class="row g-2">
                     <div class="col-sm-6">
                         <label for="txtTipoDocumento" class="form-label">Tipo de Documento</label>
-                        <input type="text" class="form-control" id="txtTipoDocumento">
+                        <input type="text" class="form-control" id="txtTipoDocumento" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="txtNumeroDocumento" class="form-label">Número de Documento</label>
-                        <input type="number" class="form-control" id="txtNumeroDocumento">
+                        <input type="number" class="form-control" id="txtNumeroDocumento" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="txtNombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="txtNombre">
+                        <input type="text" class="form-control" id="txtNombre" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtApellido" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" id="txtApellido">
+                        <input type="text" class="form-control" id="txtApellido" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="txtTelefono" class="form-label">Telefono Residencial</label>
-                        <input type="number" class="form-control" id="txtTelefono">
+                        <input type="number" class="form-control" id="txtTelefono" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtCelular" class="form-label">Célular</label>
-                        <input type="number" class="form-control" id="txtCelular">
+                        <input type="number" class="form-control" id="txtCelular" autocomplete="">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtDireccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="txtDireccion">
+                        <input type="text" class="form-control" id="txtDireccion" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtCiudad" class="form-label">Ciudad</label>
-                        <input type="text" class="form-control" id="txtCiudad">
+                        <input type="text" class="form-control" id="txtCiudad" autocomplete="">
                     </div>
-
                     <div class="col-sm-6">
                         <label for="txtDepartamento" class="form-label">Departamento</label>
-                        <input type="text" class="form-control" id="txtDepartamento">
+                        <input type="text" class="form-control" id="txtDepartamento" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtPais" class="form-label">Pais</label>
-                        <input type="text" class="form-control" id="txtPais">
+                        <input type="text" class="form-control" id="txtPais" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtProfesion" class="form-label">Profesion</label>
-                        <input type="text" class="form-control" id="txtProfesion">
+                        <input type="text" class="form-control" id="txtProfesion" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtSueldo" class="form-label">Sueldo</label>
+                        <input type="text" class="form-control" id="txtSueldo" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtEmail" class="form-label">Correo</label>
+                        <input type="text" class="form-control" id="txtEmail" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtContra" class="form-label">Contraseña</label>
+                        <input type="text" class="form-control" id="txtContra" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtDetalleTipo" class="form-label">Tipo Detalle Usuario</label>
+                        <input type="number" class="form-control" id="txtDetalleTipo" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtPuesto" class="form-label">Puesto</label>
+                        <input type="text" class="form-control" id="txtPuesto" autocomplete="off">
                     </div>
 
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div id="mensajeerror" class="alert alert-danger" role="alert">
+                                El que mire esto porfavor necesito ayuda, que alguien llame a la policia me estan matandooooo! :,(
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -125,34 +154,177 @@
 </div>
 
 
+
 @section scripts{
     <script>
 
         var tabladata;
+        var filaSeleccionada;
 
-        jQuery.ajax({
+        tabladata = $("#tabla").DataTable({
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarUsuarios", "Home")',
+                type: "GET",
+                dataType: "json"
+            },
+            "columns": [
+                { "data": "USU_ID" },
+                { "data": "USU_TIPO_DOC" },
+                { "data": "USU_NO_DOC_PK" },
+                { "data": "USU_NOMBRE" },
+                { "data": "USU_APELLIDO" },
+                { "data": "USU_TELEFONO_RES" },
+                { "data": "USU_TELEFONO_CEL" },
+                { "data": "USU_DIRECCION" },
+                { "data": "USU_CIUDAD" },
+                { "data": "USU_DEPTO" },
+                { "data": "USU_PAIS" },
+                { "data": "USU_PROFESION" },
+                { "data": "USU_SUELDO" },
+                { "data": "USU_CORREO" },
+                { "data": "USU_CLAVE" },
+                {
+                    "defaultContent": ' <button type="button" class="btn btn-sm btn-success btn-editar"><i class="fas fa-pen"></i></button>' +
+                        ' <button type="button" class="btn btn-danger btn-sm ms-2" id="eliminar"><i class="fas fa-trash"></i></button>',
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+            }
+        });
 
-            url: '@Url.Action("ListarUsuarios", "Home")',
-            type: "GET",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
+        function abrirModal(json) {
+            $("#txtIdEmpleado").val(0);
+            $("#txtTipoDocumento").val("");
+            $("#txtNumeroDocumento").val("");
+            $("#txtNombre").val("");
+            $("#txtApellido").val("");
+            $("#txtTelefono").val("");
+            $("#txtCelular").val("");
+            $("#txtDireccion").val("");
+            $("#txtCiudad").val("");
+            $("#txtDepartamento").val("");
+            $("#txtPais").val("");
+            $("#txtProfesion").val("");
+            $("#txtSueldo").val("");
+            $("#txtEmail").val("");
+            $("#txtContra").val("");
+            $("#txtDetalleTipo").val("");
+            $("#txtPuesto").val("");
 
-                console.log(data);
+            $("#mensajeerror").hide();
+
+            if (json != null) {
+                $("#txtIdEmpleado").val(json.USU_ID);
+                $("#txtTipoDocumento").val(json.USU_TIPO_DOC);
+                $("#txtNumeroDocumento").val(json.USU_NO_DOC_PK);
+                $("#txtNombre").val(json.USU_NOMBRE);
+                $("#txtApellido").val(json.USU_APELLIDO);
+                $("#txtTelefono").val(json.USU_TELEFONO_RES);
+                $("#txtCelular").val(json.USU_TELEFONO_CEL);
+                $("#txtDireccion").val(json.USU_DIRECCION);
+                $("#txtCiudad").val(json.USU_CIUDAD);
+                $("#txtDepartamento").val(json.USU_DEPTO);
+                $("#txtPais").val(json.USU_PAIS);
+                $("#txtProfesion").val(json.USU_PROFESION);
+                $("#txtSueldo").val(json.USU_SUELDO);
+                $("#txtEmail").val(json.USU_CORREO);
+                $("#txtContra").val(json.USU_CLAVE);
+                $("#txtDetalleTipo").val(json.USU_DETALLE_TIPO);
+                $("#txtPuesto").val(json.USU_PUESTO);
             }
 
+            $("#FormModal").modal("show");
+        }
 
-        })
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            filaSeleccionada = $(this).closest("tr");
+
+            var data = tabladata.row(filaSeleccionada).data();
+
+            abrirModal(data);
+        });
+
+        function Guardar() {
+            var Usuario = {
+                USU_TIPO_DOC: $("#txtTipoDocumento").val(),
+                USU_ID: $("#txtIdEmpleado").val(),
+                USU_NO_DOC_PK: $("#txtNumeroDocumento").val(),
+                USU_NOMBRE: $("#txtNombre").val(),
+                USU_APELLIDO: $("#txtApellido").val(),
+                USU_TELEFONO_RES: $("#txtTelefono").val(),
+                USU_TELEFONO_CEL: $("#txtCelular").val(),
+                USU_DIRECCION: $("#txtDireccion").val(),
+                USU_CIUDAD: $("#txtCiudad").val(),
+                USU_DEPTO: $("#txtDepartamento").val(),
+                USU_PAIS: $("#txtPais").val(),
+                USU_PROFESION: $("#txtProfesion").val(),
+                USU_SUELDO: $("#txtSueldo").val(),
+                USU_CORREO: $("#txtEmail").val(),
+                USU_CLAVE: $("#txtContra").val(),
+                USU_DETALLE_TIPO: $("#txtDetalleTipo").val(),
+                USU_PUESTO: $("#txtPuesto").val(),
+            }
+
+           jQuery.ajax({
+                url: '@Url.Action("GuardarUsuario", "Home")',
+                type: "POST",
+                data: JSON.stringify({ objeto : Usuario}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+               success: function (data) {
 
 
-        tabladata = $("#tabla").Data
+                    //USUARIO NUEVO
+                    if (Usuario.USU_ID == 0) {
+
+                        if (data.resultado != 0) {
+
+                            Usuario.USU_ID = data.resultado;
+                            tabladata.row.add(Usuario).draw(false);
+                            $("#FormModal").modal("hide");
+
+                        } else {
+                            $("#mensajeerror").text(data.mensaje);
+                            $("#mensajeerror").show();
+                        }
+                    }
+                    //USUARIO EDITAR
+                    else {
+                        if (data.resultado) {
+
+                            tabladata.row(filaSeleccionada).data(Usuario).draw(false);
+                            filaSeleccionada = null;
+                            $("#FormModal").modal("hide");
+                        } else {
+                            alert(data.resultado);
+                            $("#mensajeerror").text(data.mensaje);
+                            $("#mensajeerror").show();
+                        }
+                        
+                    }
+                },
+               error: function (error) {
 
 
+                },
+                beforeSend: function () {
+
+                }
+            });
+
+
+
+
+
+
+        }
     </script>
-
-
-
-    } 
+}
 
 
 

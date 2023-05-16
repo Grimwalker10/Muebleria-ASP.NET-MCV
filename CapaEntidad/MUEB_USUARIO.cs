@@ -8,6 +8,7 @@ namespace CapaEntidad
 {
     public class MUEB_USUARIO
     {
+        public int USU_ID { get; set; }
         public string USU_TIPO_DOC { get; set; }
         public int USU_NO_DOC_PK { get; set; }
         public string USU_NOMBRE { get; set; }

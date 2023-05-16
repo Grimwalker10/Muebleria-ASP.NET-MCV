@@ -14,6 +14,7 @@ namespace CapaPresentacionAdmin
             bundles.Add(new Bundle("~/bundles/complementos").Include(
                         "~/Scripts/fontawesome/all.min.js",
                         "~/Scripts/DataTables/jquery.dataTables.js",
+                        "~/Scripts/DataTables/jquery.dataTables.min.js",
                         "~/Scripts/DataTables/dataTables.responsive.js",
                         "~/Scripts/loadingoverlay/loadingoverlay.min.js",
                         "~/Scripts/sweetalert.min.js",

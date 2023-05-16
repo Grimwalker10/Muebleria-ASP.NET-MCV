@@ -59,7 +59,6 @@ namespace CapaPresentacionAdmin.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            //return View();
         }
 
         [HttpPost]
