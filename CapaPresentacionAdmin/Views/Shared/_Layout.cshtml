@@ -100,7 +100,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/complementos")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.RenderFormat("<script src='{0}' defer></script>", "~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
 </html>
