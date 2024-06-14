@@ -20,7 +20,7 @@ namespace CapaDatos
             // Crear una conexión a la base de datos Oracle
             OracleConnection connection = new OracleConnection(Conexion.connectionString);
 
-            string query = "SELECT USU_ID,USU_TIPO_DOC, USU_NO_DOC_PK, USU_NOMBRE, USU_APELLIDO, USU_TELEFONO_RES, USU_TELEFONO_CEL, USU_DIRECCION, USU_CIUDAD, USU_DEPTO, USU_PAIS, USU_PROFESION, USU_CORREO, USU_CLAVE, USU_TIPO, USU_DETALLE_TIPO, USU_PUESTO, USU_SUELDO FROM MUEB_USUARIO";
+            string query = "SELECT USU_ID_PK, USU_TIPO_DOC, USU_NO_DOC, USU_NOMBRE, USU_APELLIDO, USU_TELEFONO_RES, USU_TELEFONO_CEL, USU_DIRECCION, USU_CIUDAD, USU_DEPTO, USU_PAIS, USU_PROFESION, USU_CORREO, USU_CLAVE, USU_PUESTO, USU_SUELDO FROM MUEB_USUARIO";
             OracleCommand command = new OracleCommand(query, connection);
 
             // Abrir la conexión a la base de datos
@@ -34,9 +34,9 @@ namespace CapaDatos
                 lista.Add(
                     new MUEB_USUARIO()
                     {
-                        USU_ID = Convert.ToInt32(reader["USU_ID"]),
+                        USU_ID_PK = Convert.ToInt32(reader["USU_ID_PK"]),
                         USU_TIPO_DOC = reader["USU_TIPO_DOC"].ToString(),
-                        USU_NO_DOC_PK = Convert.ToInt32(reader["USU_NO_DOC_PK"]),
+                        USU_NO_DOC = Convert.ToInt32(reader["USU_NO_DOC"]),
                         USU_NOMBRE = reader["USU_NOMBRE"].ToString(),
                         USU_APELLIDO = reader["USU_APELLIDO"].ToString(),
                         USU_TELEFONO_RES = Convert.ToInt32(reader["USU_TELEFONO_RES"].ToString()),
@@ -48,8 +48,6 @@ namespace CapaDatos
                         USU_PROFESION = reader["USU_PROFESION"].ToString(),
                         USU_CORREO = reader["USU_CORREO"].ToString(),
                         USU_CLAVE = reader["USU_CLAVE"].ToString(),
-                        USU_TIPO = reader["USU_TIPO"].ToString(),
-                        USU_DETALLE_TIPO = Convert.ToInt32(reader["USU_DETALLE_TIPO"]),
                         USU_PUESTO = reader["USU_PUESTO"].ToString(),
                         USU_SUELDO = reader["USU_SUELDO"].ToString()
                     }
@@ -77,10 +75,10 @@ namespace CapaDatos
             {
                 using (OracleConnection oconexion = new OracleConnection(Conexion.connectionString))
                 {
-                    OracleCommand cmd = new OracleCommand("PA_INS_EMPLEADO", oconexion);
-                    cmd.Parameters.Add("SP_ID", OracleDbType.Int32).Value = UltimoCantidadRegistrado;
+                    OracleCommand cmd = new OracleCommand("PA_INS_USUARIO", oconexion);
+                    cmd.Parameters.Add("SP_ID_PK", OracleDbType.Int32).Value = UltimoCantidadRegistrado;
                     cmd.Parameters.Add("SP_TIPO_DOC", OracleDbType.Varchar2).Value = obj.USU_TIPO_DOC;
-                    cmd.Parameters.Add("SP_NO_DOC", OracleDbType.Int32).Value = obj.USU_NO_DOC_PK;
+                    cmd.Parameters.Add("SP_NO_DOC", OracleDbType.Int32).Value = obj.USU_NO_DOC;
                     cmd.Parameters.Add("SP_NOMBRE", OracleDbType.Varchar2).Value = obj.USU_NOMBRE;
                     cmd.Parameters.Add("SP_APELLIDO", OracleDbType.Varchar2).Value = obj.USU_APELLIDO;
                     cmd.Parameters.Add("SP_TEL_RES", OracleDbType.Varchar2).Value = Convert.ToString(obj.USU_TELEFONO_RES);
@@ -91,16 +89,11 @@ namespace CapaDatos
                     cmd.Parameters.Add("SP_PAIS", OracleDbType.Varchar2).Value = obj.USU_PAIS;
                     cmd.Parameters.Add("SP_PROFESION", OracleDbType.Varchar2).Value = obj.USU_PROFESION;
                     cmd.Parameters.Add("SP_CORREO", OracleDbType.Varchar2).Value = obj.USU_CORREO;
-                    cmd.Parameters.Add("SP_CLAVE", OracleDbType.Varchar2).Value = obj.USU_PAIS;
+                    cmd.Parameters.Add("SP_CLAVE", OracleDbType.Varchar2).Value = obj.USU_CLAVE;
 
-                    cmd.Parameters.Add("SP_TIPO", OracleDbType.Varchar2).Value = "Empleado";
-                    cmd.Parameters.Add("SP_DETALLE_TIPO", OracleDbType.Varchar2).Value = obj.USU_DETALLE_TIPO;
                     cmd.Parameters.Add("SP_PUESTO", OracleDbType.Varchar2).Value = obj.USU_PUESTO;
                     cmd.Parameters.Add("SP_SUELDO", OracleDbType.Varchar2).Value = obj.USU_SUELDO;
                     
-                    
-                    
-
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     oconexion.Open();
@@ -138,10 +131,10 @@ namespace CapaDatos
             {
                 using (OracleConnection oconexion = new OracleConnection(Conexion.connectionString))
                 {
-                    OracleCommand cmd = new OracleCommand("PA_UPD_EMPLEADO", oconexion);
-                    cmd.Parameters.Add("SP_ID", OracleDbType.Int32).Value = obj.USU_ID;
+                    OracleCommand cmd = new OracleCommand("PA_UPD_USUARIO", oconexion);
+                    cmd.Parameters.Add("SP_ID_PK", OracleDbType.Int32).Value = obj.USU_ID_PK;
                     cmd.Parameters.Add("SP_TIPO_DOC", OracleDbType.Varchar2).Value = obj.USU_TIPO_DOC;
-                    cmd.Parameters.Add("SP_NO_DOC", OracleDbType.Int32).Value = obj.USU_NO_DOC_PK;
+                    cmd.Parameters.Add("SP_NO_DOC", OracleDbType.Int32).Value = obj.USU_NO_DOC;
                     cmd.Parameters.Add("SP_NOMBRE", OracleDbType.Varchar2).Value = obj.USU_NOMBRE;
                     cmd.Parameters.Add("SP_APELLIDO", OracleDbType.Varchar2).Value = obj.USU_APELLIDO;
                     cmd.Parameters.Add("SP_TEL_RES", OracleDbType.Varchar2).Value = Convert.ToString(obj.USU_TELEFONO_RES);
@@ -154,8 +147,6 @@ namespace CapaDatos
                     cmd.Parameters.Add("SP_CORREO", OracleDbType.Varchar2).Value = obj.USU_CORREO;
                     cmd.Parameters.Add("SP_CLAVE", OracleDbType.Varchar2).Value = obj.USU_CLAVE;
 
-
-                    cmd.Parameters.Add("SP_TIPO", OracleDbType.Varchar2).Value = "Empleado";
                     cmd.Parameters.Add("SP_PUESTO", OracleDbType.Varchar2).Value = obj.USU_PUESTO;
                     cmd.Parameters.Add("SP_SUELDO", OracleDbType.Varchar2).Value = obj.USU_SUELDO;
 
@@ -188,7 +179,7 @@ namespace CapaDatos
         public bool Eliminar(int idusuario, out string Mensaje)
         {
             bool respuesta = false;
-
+            bool verdaderarespuesta = false;
             Mensaje = string.Empty;
 
 
@@ -197,13 +188,14 @@ namespace CapaDatos
                 using (OracleConnection oconexion = new OracleConnection(Conexion.connectionString))
                 {
                     OracleCommand cmd = new OracleCommand("PA_DEL_USUARIO", oconexion);
-                    cmd.Parameters.Add("SP_ID", OracleDbType.Int32).Value = idusuario;
+                    cmd.Parameters.Add("SP_ID_PK", OracleDbType.Int32).Value = idusuario;
 
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     oconexion.Open();
 
                     respuesta = cmd.ExecuteNonQuery() > 0 ? true : false;
+                    verdaderarespuesta = true;
 
                     //Ejecuta el COMMIT para no tener los datos en la ram y se reflejen en la base de datos.
                     if (respuesta)
@@ -216,10 +208,10 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
-                respuesta = false;
+                verdaderarespuesta = false;
                 Mensaje = ex.Message;
             }
-            return respuesta;
+            return verdaderarespuesta;
         }
 
 
@@ -231,7 +223,7 @@ namespace CapaDatos
             {
                 using (OracleConnection oconexion = new OracleConnection(Conexion.connectionString))
                 {
-                    OracleCommand cmd = new OracleCommand("UPDATE MUEB_USUARIO SET USU_CLAVE = :nuevaclave WHERE USU_NO_DOC_PK = :idusuario", oconexion);
+                    OracleCommand cmd = new OracleCommand("UPDATE MUEB_USUARIO SET USU_CLAVE = :nuevaclave WHERE USU_ID_PK = :idusuario", oconexion);
                     cmd.Parameters.Add(new OracleParameter(":nuevaclave", nuevaclave));
                     cmd.Parameters.Add(new OracleParameter(":idusuario", idusuario));
                     cmd.CommandType = CommandType.Text;
@@ -264,7 +256,7 @@ namespace CapaDatos
             {
                 using (OracleConnection oconexion = new OracleConnection(Conexion.connectionString))
                 {
-                    OracleCommand cmd = new OracleCommand("UPDATE MUEB_USUARIO SET USU_CLAVE = :nuevaclave WHERE USU_NO_DOC_PK = :idusuario", oconexion);
+                    OracleCommand cmd = new OracleCommand("UPDATE MUEB_USUARIO SET USU_CLAVE = :nuevaclave WHERE USU_ID_PK = :idusuario", oconexion);
                     cmd.Parameters.Add(new OracleParameter(":nuevaclave", clave));
                     cmd.Parameters.Add(new OracleParameter(":idusuario", idusuario));
                     cmd.CommandType = CommandType.Text;

@@ -1,0 +1,80 @@
+﻿@model CapaEntidad.MUEB_PRODUCTO
+
+@{
+    ViewBag.Title = "DetalleProducto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalle del Producto</h2>
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="data:image/@Html.DisplayTextFor(m => m.PROD_EXTENSION);base64,@Html.DisplayTextFor(m => m.PROD_BASE64)" alt="..." /></div>
+            <div class="col-md-6">
+                <div class="small mb-1"> SKU : @Html.DisplayTextFor(m => m.PROD_ID_PK)</div>
+                <h1 class="display-5 fw-bolder">@Html.DisplayTextFor(m => m.PROD_NOMBRE)</h1>
+                <div class="fs-5 mb-5">
+                    @* <span class="text-decoration-line-through">$45.00</span> -->*@
+                    <span>Q @Html.DisplayTextFor(m => m.PROD_PRECIO)</span>
+                </div>
+                <p class="lead">@Html.DisplayTextFor(m => m.PROD_DESCRIPCION)</p>
+                <h5 class="display-9 fw-bolder"> Material : @Html.DisplayTextFor(m => m.PROD_MATERIAL)</h5>
+                <h5 class="display-9 fw-bolder"> Medidas : @Html.DisplayTextFor(m => m.PROD_ALTO) x  @Html.DisplayTextFor(m => m.PROD_ANCHO) x @Html.DisplayTextFor(m => m.PROD_PROFUNDIDAD)</h5>
+                <h5 class="display-9 fw-bolder"> Existencias : @Html.DisplayTextFor(m => m.PROD_UNIDADES)</h5>
+                <div class="d-flex">
+
+
+                    <a href="@Url.Action("Index","Tienda")" class="btn btn-danger w-50 text-center me-3">
+                        <i class="fas fa-undo-alt"></i> Volver
+                    </a>
+                    @if (Session["Cliente"] != null)
+                    {
+                        <button class="btn btn-success agregarcarrito flex-shrink-0 w-50" type="button" data-idproducto="@Html.DisplayTextFor(m => m.PROD_ID_PK)">
+                            <i class="fas fa-cart-plus"></i>
+                            Agregar al Carrito
+                        </button>
+                    }
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    
+    <script>
+         $(document).on("click", "button.agregarcarrito", function () {
+            console.log($(this).data("idproducto"))
+
+            jQuery.ajax({
+                url: '@Url.Action("AgregarCarrito", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: $(this).data("idproducto") }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.respuesta) {
+
+                        MostrarCantidadCarrito();
+                        swal("", "Agregado al Carrito", "warning");
+
+                    } else {
+                        swal("",)
+
+                    }
+                }
+            })
+        })
+    </script>
+    
+    
+    
+    
+    }

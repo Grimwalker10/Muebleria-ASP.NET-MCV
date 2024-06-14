@@ -8,9 +8,9 @@ namespace CapaEntidad
 {
     public class MUEB_USUARIO
     {
-        public int USU_ID { get; set; }
+        public int USU_ID_PK { get; set; }
         public string USU_TIPO_DOC { get; set; }
-        public int USU_NO_DOC_PK { get; set; }
+        public int USU_NO_DOC { get; set; }
         public string USU_NOMBRE { get; set; }
         public string USU_APELLIDO { get; set; }
         public int USU_TELEFONO_RES { get; set; }
@@ -28,8 +28,6 @@ namespace CapaEntidad
 
         /*FILAS EXCLUSIVAS EN CASO QUE FUERA UN EMPLEADO EL REGISTRO
         EN CUESTION*/
-        public string USU_TIPO { get; set; }
-        public int USU_DETALLE_TIPO { get; set; }
         public string USU_PUESTO { get; set; }
         public string USU_SUELDO { get; set; }
      

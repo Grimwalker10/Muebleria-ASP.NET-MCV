@@ -1,8 +1,265 @@
-﻿
+﻿@model CapaEntidad.MUEB_CATEGORIA
+
 @{
-    ViewBag.Title = "Categoria";
+    ViewBag.Title = "CATEGORIA";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Categoria</h2>
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="index.html">Mantenimiento</a></li>
+    <li class="breadcrumb-item active">Categorias</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i> Lista de Categorias
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
+            </div>
+        </div>
+
+        <hr />
+        <div class="table-responsive">
+            <table id="tabla" class="table table-striped table-bordered table-condensed" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripcción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">AYUDA NO HE DORMIDO NADA, QUISIERA ESTAR EN MI CAMA DESCANSANDO, O SER UN NAHUAL, NO RESPONSABILIDADES, NO PREOCUPACIONES, SOLO PURO COTORREO EN EL MONTE</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body g-2">
+
+                <input id="txtIdCategoria" type="text" value="0" />
+                <!-- CREAR EMPLEADO  -------------------------------------------------CAMBIAR-->
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <label for="txtNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="txtNombre" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtDesc" class="form-label">Descripcción</label>
+                        <input type="text" class="form-control" id="txtDesc" autocomplete="off">
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div id="mensajeerror" class="alert alert-danger" role="alert">
+                                El que mire esto porfavor necesito ayuda, que alguien llame a la policia me estan matandooooo! :,(
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+
+       
+        var tabladata;
+        var filaSeleccionada;
+
+        tabladata = $("#tabla").DataTable({
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarCategorias", "Mantenedor")',
+                type: "GET",
+                dataType: "json"
+            },
+            "columns": [
+                { "data": "CAT_ID", "searchable": true },
+                { "data": "CAT_NOMBRE", "searchable": false },
+                { "data": "CAT_DESCRIPCION", "searchable": true },
+                {
+                    "defaultContent": ' <button type="button" class="btn btn-sm btn-primary btn-editar"><i class="fas fa-pen"></i></button>' +
+                        ' <button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar" id="eliminar"><i class="fas fa-trash"></i></button>',
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+            }
+        });
+
+        function abrirModal(json) {
+            $(".modal-header").css("background-color", "#1cc88a");
+            $(".modal-header").css("color", "white");
+            $(".modal-title").text("Nueva Categoria");
+
+            $("#txtIdCategoria").val(0);
+            $("#txtNombre").val("");
+            $("#txtDesc").val("");
+
+            $("#mensajeerror").hide();
+
+            if (json != null) {
+                $(".modal-header").css("background-color", "#4e73df");
+                $(".modal-header").css("color", "white");
+                $(".modal-title").text("Editar Categoria");
+
+                $("#txtIdCategoria").val(json.CAT_ID);
+                $("#txtNombre").val(json.CAT_NOMBRE);
+                $("#txtDesc").val(json.CAT_DESCRIPCION);
+            }
+
+            $("#FormModal").modal("show");
+        }
+
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            filaSeleccionada = $(this).closest("tr");
+
+            var data = tabladata.row(filaSeleccionada).data();
+
+            abrirModal(data);
+        });
+
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+            var usuarioseleccionado = $(this).closest("tr");
+
+            var data = tabladata.row(usuarioseleccionado).data();
+
+            swal({
+                title: "Esta seguro?",
+                text: "Desea Eliminar la Categoria?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "SI",
+                cancelButtonText: "NO",
+                closeOnConfirm: true
+            },
+                function () {
+
+                    jQuery.ajax({
+
+                        url: '@Url.Action("EliminarCategoria", "Mantenedor")',
+                        type: "POST",
+                        data: JSON.stringify({ id : data.CAT_ID}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+                            if (data.resultado) {
+                                tabladata.row(usuarioseleccionado).remove().draw();
+                            } else {
+                                swal("No se pudo Eliminar", data.mensaje, "error")
+                            }
+
+                        },
+                        error: function (data) {
+                            console.log(error);
+                        },
+                        beforeSend: function () {
+
+                        }
+
+                    });
+
+
+                });
+
+            console.log(data);
+        });
+
+
+
+
+        function Guardar() {
+            var Usuario = {
+                CAT_ID: $("#txtIdCategoria").val(),
+                CAT_NOMBRE: $("#txtNombre").val(),
+                CAT_DESCRIPCION: $("#txtDesc").val()
+            }
+
+           jQuery.ajax({
+                url: '@Url.Action("GuardarCategoria", "Mantenedor")',
+                type: "POST",
+                data: JSON.stringify({ objeto : Usuario}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+               success: function (data) {
+
+
+                    //USUARIO NUEVO
+                    if (Usuario.CAT_ID == 0) {
+
+                        if (data.resultado != 0) {
+
+                            Usuario.CAT_ID = data.resultado;
+                            tabladata.row.add(Usuario).draw(false);
+                            $("#FormModal").modal("hide");
+
+                        } else {
+                            $("#mensajeerror").text(data.mensaje);
+                            $("#mensajeerror").show();
+                        }
+                    }
+                    //USUARIO EDITAR
+                    else {
+                        if (data.resultado) {
+
+                            tabladata.row(filaSeleccionada).data(Usuario).draw(false);
+                            filaSeleccionada = null;
+                            $("#FormModal").modal("hide");
+                        } else {
+                            alert(data.resultado);
+                            $("#mensajeerror").text(data.mensaje);
+                            $("#mensajeerror").show();
+                        }
+
+                    }
+                },
+               error: function (error) {
+
+
+                },
+                beforeSend: function () {
+
+                }
+            });
+
+
+
+
+
+
+        }
+    </script>
+}
+
 

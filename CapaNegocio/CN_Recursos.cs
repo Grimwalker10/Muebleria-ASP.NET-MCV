@@ -38,7 +38,7 @@ namespace CapaNegocio
             return Sb.ToString();
         }
 
-
+        //Enviar correo por medio de la api de gmail y llave de aplicacion. --Diego
         public static bool EnviarCorreo(string correo, string asunto, string mensaje)
         {
             bool resultado = false;
@@ -66,7 +66,7 @@ namespace CapaNegocio
             }
             catch (Exception ex)
             {
-
+                
                 resultado = false;
             }
 

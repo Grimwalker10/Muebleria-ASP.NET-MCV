@@ -20,21 +20,20 @@ namespace CapaNegocio
             Mensaje = string.Empty;
 
             if(string.IsNullOrEmpty(obj.USU_TIPO_DOC) || string.IsNullOrEmpty(obj.USU_NOMBRE) || string.IsNullOrEmpty(obj.USU_DIRECCION) || string.IsNullOrEmpty(obj.USU_CIUDAD) 
-                || string.IsNullOrEmpty(obj.USU_DEPTO) || string.IsNullOrEmpty(obj.USU_PAIS) || string.IsNullOrEmpty(obj.USU_PROFESION) || string.IsNullOrEmpty(obj.USU_CORREO) ||
-                string.IsNullOrEmpty(obj.USU_CLAVE))
+                || string.IsNullOrEmpty(obj.USU_DEPTO) || string.IsNullOrEmpty(obj.USU_PAIS) || string.IsNullOrEmpty(obj.USU_PROFESION) || string.IsNullOrEmpty(obj.USU_CORREO))
             {
-                Mensaje = "No se ha podido crear el nuevo usuario";
+                Mensaje = "No se ha podido crear el nuevo usuario (capa Negocio)";
                 return 0;
             }
-            if(Listar().Any(u => u.USU_NO_DOC_PK == obj.USU_NO_DOC_PK))
+            if(Listar().Any(u => u.USU_NO_DOC == obj.USU_NO_DOC || u.USU_ID_PK == obj.USU_ID_PK))
             {
-                Mensaje = "No se ha podido crear el nuevo usuario";
+                Mensaje = "No se ha podido crear el nuevo usuario/ usuario ya registrado con el mismo id o numero de documento.";
                 return 0;
             }
             else
             {
                 string clave = "default123";
-                obj.USU_CLAVE = CN_Recursos.ConvertirSha256(clave);
+                obj.USU_CLAVE = clave;
                 return objCapaDato.Registrar(obj, out Mensaje);
             }
 

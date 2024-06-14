@@ -9,7 +9,7 @@ namespace CapaPresentacionAdmin
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new Bundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js")); 
 
             bundles.Add(new Bundle("~/bundles/complementos").Include(
                         "~/Scripts/fontawesome/all.min.js",

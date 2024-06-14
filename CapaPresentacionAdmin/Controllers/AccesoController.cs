@@ -83,7 +83,7 @@ namespace CapaPresentacionAdmin.Controllers
             }
             else
             {
-                int idusuario = oUsuario.USU_NO_DOC_PK;
+                int idusuario = oUsuario.USU_ID_PK;
 
                 if (!clave.Equals(oUsuario.USU_CLAVE))
                 {
@@ -147,7 +147,7 @@ namespace CapaPresentacionAdmin.Controllers
             else
             {  
                 string mensaje = string.Empty;
-                int idusuario = oUsuario.USU_NO_DOC_PK;
+                int idusuario = oUsuario.USU_ID_PK;
                 bool respuesta = new CN_Usuarios().ReestablecerClave(idusuario, correo, out mensaje);
 
                 if (respuesta)

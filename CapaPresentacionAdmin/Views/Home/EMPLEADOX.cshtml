@@ -1,7 +1,7 @@
 ﻿@model CapaEntidad.MUEB_USUARIO
 
 @{
-    ViewBag.Title = "EMPLEADOX";
+    ViewBag.Title = "EMPLEADO";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -57,8 +57,8 @@
 <div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Crear Empleado</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">AYUDA NO HE DORMIDO NADA, QUISIERA ESTAR EN MI CAMA DESCANSANDO, O SER UN NAHUAL, NO RESPONSABILIDADES, NO PREOCUPACIONES, SOLO PURO COTORREO EN EL MONTE</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body g-2">
@@ -99,7 +99,7 @@
                     </div>
                     <div class="col-sm-6">
                         <label for="txtCiudad" class="form-label">Ciudad</label>
-                        <input type="text" class="form-control" id="txtCiudad" autocomplete="">
+                        <input type="text" class="form-control" id="txtCiudad" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtDepartamento" class="form-label">Departamento</label>
@@ -122,12 +122,8 @@
                         <input type="text" class="form-control" id="txtEmail" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
-                        <label for="txtContra" class="form-label">Contraseña</label>
+                        <label for="txtContra" class="form-label" id="textoContra">Contraseña</label>
                         <input type="text" class="form-control" id="txtContra" autocomplete="off">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="txtDetalleTipo" class="form-label">Tipo Detalle Usuario</label>
-                        <input type="number" class="form-control" id="txtDetalleTipo" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="txtPuesto" class="form-label">Puesto</label>
@@ -169,24 +165,24 @@
                 dataType: "json"
             },
             "columns": [
-                { "data": "USU_ID" },
-                { "data": "USU_TIPO_DOC" },
-                { "data": "USU_NO_DOC_PK" },
-                { "data": "USU_NOMBRE" },
-                { "data": "USU_APELLIDO" },
-                { "data": "USU_TELEFONO_RES" },
-                { "data": "USU_TELEFONO_CEL" },
-                { "data": "USU_DIRECCION" },
-                { "data": "USU_CIUDAD" },
-                { "data": "USU_DEPTO" },
-                { "data": "USU_PAIS" },
-                { "data": "USU_PROFESION" },
-                { "data": "USU_SUELDO" },
-                { "data": "USU_CORREO" },
-                { "data": "USU_CLAVE" },
+                { "data": "USU_ID_PK", "searchable": false },
+                { "data": "USU_TIPO_DOC", "searchable": false },
+                { "data": "USU_NO_DOC", "searchable": true },
+                { "data": "USU_NOMBRE", "searchable": false },
+                { "data": "USU_APELLIDO", "searchable": false },
+                { "data": "USU_TELEFONO_RES", "searchable": false },
+                { "data": "USU_TELEFONO_CEL", "searchable": false },
+                { "data": "USU_DIRECCION", "searchable": false },
+                { "data": "USU_CIUDAD", "searchable": false },
+                { "data": "USU_DEPTO", "searchable": false },
+                { "data": "USU_PAIS", "searchable": false },
+                { "data": "USU_PROFESION", "searchable": false },
+                { "data": "USU_SUELDO", "searchable": false },
+                { "data": "USU_CORREO", "searchable": false },
+                { "data": "USU_CLAVE", "searchable": false },
                 {
-                    "defaultContent": ' <button type="button" class="btn btn-sm btn-success btn-editar"><i class="fas fa-pen"></i></button>' +
-                        ' <button type="button" class="btn btn-danger btn-sm ms-2" id="eliminar"><i class="fas fa-trash"></i></button>',
+                    "defaultContent": ' <button type="button" class="btn btn-sm btn-primary btn-editar"><i class="fas fa-pen"></i></button>' +
+                        ' <button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar" id="eliminar"><i class="fas fa-trash"></i></button>',
                     "orderable": false,
                     "searchable": false,
                     "width": "90px"
@@ -198,6 +194,10 @@
         });
 
         function abrirModal(json) {
+            $(".modal-header").css("background-color", "#1cc88a");
+            $(".modal-header").css("color", "white");
+            $(".modal-title").text("Nuevo Empleado");
+            
             $("#txtIdEmpleado").val(0);
             $("#txtTipoDocumento").val("");
             $("#txtNumeroDocumento").val("");
@@ -212,16 +212,21 @@
             $("#txtProfesion").val("");
             $("#txtSueldo").val("");
             $("#txtEmail").val("");
+            $("#textoContra").hide();
+            $("#txtContra").hide();
             $("#txtContra").val("");
-            $("#txtDetalleTipo").val("");
             $("#txtPuesto").val("");
 
             $("#mensajeerror").hide();
 
             if (json != null) {
-                $("#txtIdEmpleado").val(json.USU_ID);
+                $(".modal-header").css("background-color", "#4e73df");
+                $(".modal-header").css("color", "white");
+                $(".modal-title").text("Editar Empleado"); 
+
+                $("#txtIdEmpleado").val(json.USU_ID_PK);
                 $("#txtTipoDocumento").val(json.USU_TIPO_DOC);
-                $("#txtNumeroDocumento").val(json.USU_NO_DOC_PK);
+                $("#txtNumeroDocumento").val(json.USU_NO_DOC);
                 $("#txtNombre").val(json.USU_NOMBRE);
                 $("#txtApellido").val(json.USU_APELLIDO);
                 $("#txtTelefono").val(json.USU_TELEFONO_RES);
@@ -233,8 +238,9 @@
                 $("#txtProfesion").val(json.USU_PROFESION);
                 $("#txtSueldo").val(json.USU_SUELDO);
                 $("#txtEmail").val(json.USU_CORREO);
+                $("#textoContra").show();
+                $("#txtContra").show();
                 $("#txtContra").val(json.USU_CLAVE);
-                $("#txtDetalleTipo").val(json.USU_DETALLE_TIPO);
                 $("#txtPuesto").val(json.USU_PUESTO);
             }
 
@@ -249,11 +255,62 @@
             abrirModal(data);
         });
 
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+            var usuarioseleccionado = $(this).closest("tr");
+
+            var data = tabladata.row(usuarioseleccionado).data();
+
+            swal({
+                title: "Esta seguro?",
+                text: "Desea Eliminar el usuario?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "SI",
+                cancelButtonText: "NO",
+                closeOnConfirm: true
+            },
+                function () {
+
+                    jQuery.ajax({
+
+                        url: '@Url.Action("EliminarEmpleado", "Home")',
+                        type: "POST",
+                        data: JSON.stringify({ id : data.USU_ID_PK}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+                            if (data.resultado) {
+                                tabladata.row(usuarioseleccionado).remove().draw();
+                            } else {
+                                swal("No se pudo Eliminar", data.mensaje, "error")
+                            }
+
+                        },
+                        error: function (data) {
+                            console.log(error);
+                        },
+                        beforeSend: function () {
+
+                        }
+
+                    });
+
+
+                });
+
+            console.log(data);
+        });
+
+
+
+
         function Guardar() {
             var Usuario = {
                 USU_TIPO_DOC: $("#txtTipoDocumento").val(),
-                USU_ID: $("#txtIdEmpleado").val(),
-                USU_NO_DOC_PK: $("#txtNumeroDocumento").val(),
+                USU_ID_PK: $("#txtIdEmpleado").val(),
+                USU_NO_DOC: $("#txtNumeroDocumento").val(),
                 USU_NOMBRE: $("#txtNombre").val(),
                 USU_APELLIDO: $("#txtApellido").val(),
                 USU_TELEFONO_RES: $("#txtTelefono").val(),
@@ -266,8 +323,7 @@
                 USU_SUELDO: $("#txtSueldo").val(),
                 USU_CORREO: $("#txtEmail").val(),
                 USU_CLAVE: $("#txtContra").val(),
-                USU_DETALLE_TIPO: $("#txtDetalleTipo").val(),
-                USU_PUESTO: $("#txtPuesto").val(),
+                USU_PUESTO: $("#txtPuesto").val()
             }
 
            jQuery.ajax({
@@ -280,11 +336,12 @@
 
 
                     //USUARIO NUEVO
-                    if (Usuario.USU_ID == 0) {
+                    if (Usuario.USU_ID_PK == 0) {
 
                         if (data.resultado != 0) {
 
-                            Usuario.USU_ID = data.resultado;
+                            Usuario.USU_ID_PK = data.resultado;
+                            Usuario.USU_CLAVE = "default123";
                             tabladata.row.add(Usuario).draw(false);
                             $("#FormModal").modal("hide");
 
@@ -305,7 +362,7 @@
                             $("#mensajeerror").text(data.mensaje);
                             $("#mensajeerror").show();
                         }
-                        
+
                     }
                 },
                error: function (error) {

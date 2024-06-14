@@ -12,10 +12,14 @@ using CapaEntidad;
 using CapaDatos;
 using System.Web.Services.Description;
 using System.Collections;
+using ClosedXML.Excel;
+using System.IO;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace CapaPresentacionAdmin.Controllers
 {
-    [Authorize] //Hace que no se muestren las vistas si no esta autorizado.
+    [Authorize] //Hace que no se muestren las vistas si no esta autorizado. --Diego 
     public class HomeController : Controller
     {
 
@@ -29,7 +33,7 @@ namespace CapaPresentacionAdmin.Controllers
         }
         public ActionResult EMPLEADOX()
         {
-            ViewBag.Title = "EMPLEADOX";
+            ViewBag.Title = "EMPLEADO";
             return View();
         }
 
@@ -40,19 +44,19 @@ namespace CapaPresentacionAdmin.Controllers
             List<MUEB_USUARIO> oLista = new List<MUEB_USUARIO>();
             oLista = new CN_Usuarios().Listar();
 
-            return Json(new {data = oLista}, JsonRequestBehavior.AllowGet);
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
         }
 
 
 
-        /*METODO PARA REGISTRAR USUAIROS ---------------------------------------------------------------------- byron*/
+
         [HttpPost]
         public JsonResult GuardarUsuario(MUEB_USUARIO objeto)
         {
             object resultado;
             string mensaje = string.Empty;
 
-            if(objeto.USU_ID == 0)
+            if (objeto.USU_ID_PK == 0)
             {
                 resultado = new CN_Usuarios().Registrar(objeto, out mensaje);
             }
@@ -66,75 +70,32 @@ namespace CapaPresentacionAdmin.Controllers
 
         }
 
-        /*METODO PARA ACTUALIZAR USUAIROS ---------------------------------------------------------------------- byron*/
-        public int Editar_Usuario(MUEB_USUARIO obj, out string Mensaje)
+        [HttpGet]
+        public JsonResult ListaReporte(string fechainicio, string fechafin, string idtransaccion)
         {
-            bool resultado = false;
-            int idautogenerado = 0;
-            Mensaje = string.Empty;
+            List<MUEB_REPORTE> oLista = new List<MUEB_REPORTE>();
+
+            oLista = new CN_Reporte().Ventas(fechainicio, fechafin, idtransaccion);
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
 
 
-            try
+
+        public ActionResult GetSummaryData()
+        {
+            int clientes = new CN_Cliente().Listar().Count(); // Función para obtener la cantidad de clientes desde tu fuente de datos
+            int productos = new CN_PRODUCTO().Listar().Count(); // Función para obtener la cantidad de productos desde tu fuente de datos
+            int empleados = new CN_Usuarios().Listar().Count(); // Función para obtener la cantidad de empleados desde tu fuente de datos
+
+            var data = new
             {
-                using (OracleConnection con = new OracleConnection(Conexion.connectionString)) /*Aca intente ponerlo desde oracle, no se si sea asi*/
-                {
-                    OracleCommand cmd = new OracleCommand("PA_UPD_EMPLEADO", con);/*Aca llamo al procedimiento almacenado*/
+                clientes = clientes,
+                productos = productos,
+                empleados = empleados
+            };
 
-                    cmd.Parameters.Add("USU_NO_DOC_PK", obj.USU_NO_DOC_PK);
-                    cmd.Parameters.Add("USU_TIPO_DOC", obj.USU_TIPO_DOC);
-                    cmd.Parameters.Add("USU_NOMBRE", obj.USU_NOMBRE);
-                    cmd.Parameters.Add("USU_APELLIDO", obj.USU_APELLIDO);
-                    cmd.Parameters.Add("USU_TELEFONO_RES", obj.USU_TELEFONO_RES);
-                    cmd.Parameters.Add("USU_TELEFONO_CEL", obj.USU_TELEFONO_CEL);
-                    cmd.Parameters.Add("USU_DIRECCION", obj.USU_DIRECCION);
-                    cmd.Parameters.Add("USU_DEPTO", obj.USU_DEPTO);
-                    cmd.Parameters.Add("USU_PAIS", obj.USU_PAIS);
-                    cmd.Parameters.Add("USU_PROFESION", obj.USU_PROFESION);
-                    cmd.Parameters.Add("USU_SUELDO", obj.USU_SUELDO);
-                    cmd.Parameters.Add("USU_CORREO", obj.USU_CORREO);
-                    cmd.Parameters.Add("USU_CLAVE", obj.USU_CLAVE);
-
-                    cmd.Parameters.Add("Resultado", OracleDbType.Int32).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("Mensaje", OracleDbType.Varchar2, 500).Direction = ParameterDirection.Output;
-
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-
-                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
-                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
-
-                    /*CHATGPT DICE QUE ASI SE DEBE DE HACER EN ORACLE ------------------------------------------------------------------*/
-                    /* cmd.Parameters.Add("USU_NO_DOC_PK", OracleDbType.Number).Value = obj.USU_NO_DOC_PK;
-                     cmd.Parameters.Add("USU_TIPO_DOC", OracleDbType.Varchar2).Value = obj.USU_TIPO_DOC;
-                     cmd.Parameters.Add("USU_NOMBRE", OracleDbType.Varchar2).Value = obj.USU_NOMBRE;
-                     cmd.Parameters.Add("USU_APELLIDO", OracleDbType.Varchar2).Value = obj.USU_APELLIDO;
-                     cmd.Parameters.Add("USU_TELEFONO_RES", OracleDbType.Varchar2).Value = obj.USU_TELEFONO_RES;
-                     cmd.Parameters.Add("USU_TELEFONO_CEL", OracleDbType.Varchar2).Value = obj.USU_TELEFONO_CEL;
-                     cmd.Parameters.Add("USU_DIRECCION", OracleDbType.Varchar2).Value = obj.USU_DIRECCION;
-                     cmd.Parameters.Add("USU_DEPTO", OracleDbType.Varchar2).Value = obj.USU_DEPTO;
-                     cmd.Parameters.Add("USU_PAIS", OracleDbType.Varchar2).Value = obj.USU_PAIS;
-                     cmd.Parameters.Add("USU_PROFESION", OracleDbType.Varchar2).Value = obj.USU_PROFESION;*/
-
-                    //Ejecuta el COMMIT para no tener los datos en la ram y se reflejen en la base de datos.                  
-                    OracleCommand cmdCommit = new OracleCommand("COMMIT", con);
-                    cmdCommit.ExecuteNonQuery();
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-                idautogenerado = 0;
-                Mensaje = ex.Message;
-            }
-            return idautogenerado;
-
-
-
-
-
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -142,16 +103,118 @@ namespace CapaPresentacionAdmin.Controllers
 
 
 
+        [HttpPost]
+        public FileResult ExportarVenta(string fechainicio, string fechafin, string idtransaccion)
+        {
+            List<MUEB_REPORTE> oLista = new List<MUEB_REPORTE>();
+
+            oLista = new CN_Reporte().Ventas(fechainicio, fechafin, idtransaccion);
+
+            // Crear el documento PDF
+            Document document = new Document();
+            MemoryStream memoryStream = new MemoryStream();
+            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+            document.Open();
 
 
 
+            // Crear una tabla para los datos
+            PdfPTable table = new PdfPTable(7);
+
+            // Agregar las cabeceras de columna
+            table.AddCell("Fecha Venta");
+            table.AddCell("Cliente");
+            table.AddCell("Producto");
+            table.AddCell("Precio");
+            table.AddCell("Cantidad");
+            table.AddCell("Total");
+            table.AddCell("Id Venta");
+
+            // Agregar los datos de la lista
+            foreach (MUEB_REPORTE rp in oLista)
+            {
+                table.AddCell(rp.FechaVenta);
+                table.AddCell(rp.Cliente);
+                table.AddCell(rp.Producto);
+                table.AddCell(rp.Precio.ToString());
+                table.AddCell(rp.Cantidad.ToString());
+                table.AddCell(rp.Total.ToString());
+                table.AddCell(rp.IdTransaccion.ToString());
+            }
+
+            // Agregar la tabla al documento
+            document.Add(table);
+            document.Close();
+
+            // Obtener los bytes del documento PDF
+            byte[] pdfBytes = memoryStream.ToArray();
+
+            // Devolver el archivo PDF como resultado
+            return File(pdfBytes, "application/pdf", "ReporteVenta" + DateTime.Now.ToString() + ".pdf");
+        }
 
 
 
+        /*
+        [HttpPost]
+        public FileResult ExportarVenta(string fechainicio, string fechafin, string idtransaccion)
+        {
+            List<MUEB_REPORTE> oLista = new List<MUEB_REPORTE>();
+
+            oLista = new CN_Reporte().Ventas(fechainicio, fechafin, idtransaccion); 
+
+            DataTable dt = new DataTable();
+
+            dt.Locale = new System.Globalization.CultureInfo("es-GT");
+
+            dt.Columns.Add("Fecha Venta", typeof(string));
+            dt.Columns.Add("Cliente", typeof (string));
+            dt.Columns.Add("Producto", typeof(string));
+            dt.Columns.Add("Precio", typeof(decimal));
+            dt.Columns.Add("Cantidad", typeof(int));
+            dt.Columns.Add("Total", typeof(decimal));
+            dt.Columns.Add("Id Venta", typeof(int));
+
+            foreach(MUEB_REPORTE rp in oLista)
+            {
+                dt.Rows.Add(new object[]
+                {
+                    rp.FechaVenta,
+                    rp.Cliente,
+                    rp.Producto,
+                    rp.Precio,
+                    rp.Cantidad,
+                    rp.Total,
+                    rp.IdTransaccion
+                });
+            }
+
+            dt.TableName = "Datos";
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                using (MemoryStream stream = new MemoryStream()) {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteVenta" + DateTime.Now.ToString() + ".xlsx");
+                }
+            }
 
 
 
+        }*/
 
+
+        [HttpPost]
+        public JsonResult EliminarEmpleado(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new CN_Usuarios().Eliminar(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
 
 
 

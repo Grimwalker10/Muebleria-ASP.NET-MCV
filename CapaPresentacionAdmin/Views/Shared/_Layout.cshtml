@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
     @Styles.Render("~/Content/css")
+    @Scripts.Render("~/Scripts/jquery-3.6.4.min.js")
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body class="sb-nav-fixed">
@@ -39,17 +40,21 @@
                         </a>
                         <a class="nav-link" href="@Url.Action("EMPLEADOX","Home")">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Usuarios
+                            Empleados
                         </a>
 
                         <div class="sb-sidenav-menu-heading">Mantenimiento</div>
+                        <a class="nav-link" href="@Url.Action("Cliente","Mantenedor")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-id-badge"></i></div>
+                            Clientes
+                        </a>
                         <a class="nav-link" href="@Url.Action("Categoria","Mantenedor")">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Categorias
                         </a>
-                        <a class="nav-link" href="@Url.Action("Cliente","Mantenedor")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-clients"></i></div>
-                            Cliente
+                        <a class="nav-link" href="@Url.Action("Proveedor","Mantenedor")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
+                            Proveedores
                         </a>
                         <a class="nav-link" href="@Url.Action("Producto","Mantenedor")">
                             <div class="sb-nav-link-icon"><i class="fas fa-boxes"></i></div>

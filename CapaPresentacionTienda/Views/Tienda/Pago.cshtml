@@ -1,0 +1,251 @@
+﻿
+@{
+    ViewBag.Title = "Pago";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Pago</h2>
+@Scripts.Render("~/Scripts/jquery-3.6.4.min.js")
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <!--DETALLE DE PRODUCTO-->
+                        <div class="col-sm-8">
+                            <div class="me-4">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="ms-1 mt-2">Detalle de la venta</h5>
+                                  
+                                </div>
+                                <hr class="mt-2 md-2">
+                                <div id="productos-carrito">
+                                    <div class="card mb-2 card-producto">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-2 align-self-center d-flex justify-content-center">
+                                                    <img />
+                                                </div>
+                                                <div class="col-sm-4 align-self-center">
+                                                    <span class="font-weight-bold d-block">Proveedor</span>
+                                                    <span>Nombre Producto</span>
+                                                </div>
+                                                <div class="col-sm-2 align-self-center">
+                                                    <span>Precio : 1500</span>
+                                                </div>
+                                                <div class="col-sm-2 align-self-center">
+                                                    <div class="d-flex">
+                                                        
+                                                       
+                                                          
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2 align-self-center">
+                                                    <button class="btn btn-outline-danger btn-eliminar">Eliminar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+
+                                    <label class="align-self-center"><b> Total a Pagar: Q <span id="total">500</span> </b></label>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <!--DETALLE DE PAGO-->
+                        <div class="col-sm-4 float-end">
+                            <div class="card">
+                                <div class="card-body bg-light">
+                                    <h5 class="card-title">Entidad Bancaria </h5>
+                                    <form>
+                                        <div class="mb-2">
+                                            <label class="form-label">Banco: </label>
+                                            <select class="form-select form-select-sm" id="banco">
+
+                                                <option value="opcion1">Banrural</option>
+                                                <option value="opcion2">BanTrab</option>
+                                                <option value="opcion3">Banco Industrial</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label">Tipo de Tarjeta: </label>
+                                            <select class="form-select form-select-sm" id="tarjeta">
+                                                <option value="opcion1">Débito</option>
+                                                <option value="opcion2">Crédito</option>
+
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <h5 class="card-title">Detalle de Pago </h5>
+                                        <div class="mb-2">
+                                            <label for="exampleInputEmail" class="form-label">Nombres Y Apellidos: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtnombre" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="exampleInputEmail" class="form-label">Número de Tarjeta: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txttarjeta" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="exampleInputEmail" class="form-label">Código de Seguridad: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtcodigo" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="exampleInputEmail" class="form-label">Fecha de Expiración: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtfecha" autocomplete="off">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="txttelefono" class="form-label">Cuotas: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtcuotas" autocomplete="off">
+                                        </div>
+
+                                        <div class="d-grid">
+
+                                            <button class="btn btn-success" href="@Url.Action("Index", "Tienda")" type="button" onclick="RealizarPago()">
+                                                <i class="fas fa-credit-card"></i> Pagar
+                                            </button>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            jQuery.ajax({
+                url: '@Url.Action("ListarProductosCarrito", "Tienda")',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $("#productos-carrito").html("");
+                    $("#productos-carrito").LoadingOverlay("hide");
+                    $.each(response.data, function (i, item) {
+                        $("<div>").addClass("card mb-2 card-producto").append(
+                            $("<div>").addClass("card-body").append(
+                                $("<div>").addClass("row").append(
+
+
+                                     //2.-
+                                    $("<div>").addClass("col-sm-4 align-self-center ").append(
+                                        $("<h5>").text("Nombre del producto:"),
+                                        $("<span>").text(item.oProducto.PROD_NOMBRE)
+                                    ),
+                                     //3.-
+                                    $("<div>").addClass("col-sm-2 align-self-center ").append(
+                                        $("<h5>").text("Monto por unidad:"),
+                                        $("<span>").text(" "),
+                                        $("<span>").text("Q." + item.oProducto.PROD_PRECIO + ".00")
+                                    ),
+                                     //4.-
+                                    $("<div>").addClass("col-sm-2 align-self-center ").append(
+                                        $("<h5>").text("Cantidad:"),
+                                        $("<span>").text(""),
+                                        $("<div>").addClass("d-flex").append(
+
+                                            $("<input>").addClass("form-control input-cantidad p-2 text-center rounded-1").attr({ "disabled": "disabled" }).css({ "width": "40px" }).data("oProducto", item.oProducto).val(item.CAR_CANTIDAD),
+
+                                        )
+                                    ),
+
+
+
+                                )
+                            )
+                        ).appendTo("#productos-carrito");
+                    })
+                    sumarTotal();
+                }
+            })
+        })
+        function sumarTotal() {
+            var sumaTotal = parseFloat(0)
+            $("input.input-cantidad").each(function (i) {
+                var precio = $(this).data("oProducto").PROD_PRECIO;
+                var cantidad = parseFloat($(this).val())
+
+
+                var subtotal = precio * cantidad;
+                sumaTotal += subtotal;
+            })
+
+            $("#total").text(sumaTotal.toFixed(2))
+            $("#total").data("sumatotal",sumaTotal)
+        }
+
+
+
+
+
+
+
+
+
+        //PAGO------------------------------------------------------------------------------
+
+        function RealizarPago() {
+
+
+            if (
+                $("#banco").val() == null ||
+                $("#tarjeta").val() == null ||
+
+                $("#txtnombre").val() == "" ||
+                $("#txttarjeta").val() == "" ||
+                $("#txtcodigo").val() == "" ||
+                $("#txtcodigo").val() == "" ||
+                $("#txtfecha").val() == "" ||
+                $("#txtcuotas").val() == ""
+            ) {
+                swal("", "Debe completar los datos para realizar e pago", "warning");
+                return;
+            } else {
+                swal({
+                    title: "¿Esta seguro de hacer el pago?",
+
+                    type: "success",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-primary",
+                    confirmButtonText: "Si",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false
+                }, function () {
+                     swal("", "Compra Exitosa!", "success");
+                });
+            }
+
+
+
+
+        }
+
+
+
+
+
+    </script>
+}
