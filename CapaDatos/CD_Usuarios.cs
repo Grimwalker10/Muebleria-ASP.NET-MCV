@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Threading.Tasks;
 
 namespace CapaDatos
 {
@@ -26,37 +27,46 @@ namespace CapaDatos
             // Abrir la conexión a la base de datos
             connection.Open();//Dios Mio Santificado sea tu nombre esta mamada ya jala
 
-            // Ejecutar el comando y almacenar los resultados en un objeto DataReader
-            OracleDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            var task = Task.Run(async () => 
             {
-                lista.Add(
-                    new MUEB_USUARIO()
-                    {
-                        USU_ID_PK = Convert.ToInt32(reader["USU_ID_PK"]),
-                        USU_TIPO_DOC = reader["USU_TIPO_DOC"].ToString(),
-                        USU_NO_DOC = Convert.ToInt32(reader["USU_NO_DOC"]),
-                        USU_NOMBRE = reader["USU_NOMBRE"].ToString(),
-                        USU_APELLIDO = reader["USU_APELLIDO"].ToString(),
-                        USU_TELEFONO_RES = Convert.ToInt32(reader["USU_TELEFONO_RES"].ToString()),
-                        USU_TELEFONO_CEL = Convert.ToInt32(reader["USU_TELEFONO_CEL"].ToString()),
-                        USU_DIRECCION = reader["USU_DIRECCION"].ToString(),
-                        USU_CIUDAD = reader["USU_CIUDAD"].ToString(),
-                        USU_DEPTO = reader["USU_DEPTO"].ToString(),
-                        USU_PAIS = reader["USU_PAIS"].ToString(),
-                        USU_PROFESION = reader["USU_PROFESION"].ToString(),
-                        USU_CORREO = reader["USU_CORREO"].ToString(),
-                        USU_CLAVE = reader["USU_CLAVE"].ToString(),
-                        USU_PUESTO = reader["USU_PUESTO"].ToString(),
-                        USU_SUELDO = reader["USU_SUELDO"].ToString()
-                    }
 
-                    ) ;
-            }
+                // Ejecutar el comando y almacenar los resultados en un objeto DataReader
+                OracleDataReader reader = await command.ExecuteReaderAsync();
 
-            // Cerrar el DataReader y la conexión a la base de datos
-            reader.Close();
+                while (await reader.ReadAsync())
+                {
+                    lista.Add(
+                        new MUEB_USUARIO()
+                        {
+                            USU_ID_PK = Convert.ToInt32(reader["USU_ID_PK"]),
+                            USU_TIPO_DOC = reader["USU_TIPO_DOC"].ToString(),
+                            USU_NO_DOC = Convert.ToInt32(reader["USU_NO_DOC"]),
+                            USU_NOMBRE = reader["USU_NOMBRE"].ToString(),
+                            USU_APELLIDO = reader["USU_APELLIDO"].ToString(),
+                            USU_TELEFONO_RES = Convert.ToInt32(reader["USU_TELEFONO_RES"].ToString()),
+                            USU_TELEFONO_CEL = Convert.ToInt32(reader["USU_TELEFONO_CEL"].ToString()),
+                            USU_DIRECCION = reader["USU_DIRECCION"].ToString(),
+                            USU_CIUDAD = reader["USU_CIUDAD"].ToString(),
+                            USU_DEPTO = reader["USU_DEPTO"].ToString(),
+                            USU_PAIS = reader["USU_PAIS"].ToString(),
+                            USU_PROFESION = reader["USU_PROFESION"].ToString(),
+                            USU_CORREO = reader["USU_CORREO"].ToString(),
+                            USU_CLAVE = reader["USU_CLAVE"].ToString(),
+                            USU_PUESTO = reader["USU_PUESTO"].ToString(),
+                            USU_SUELDO = reader["USU_SUELDO"].ToString()
+                        }
+
+                        );
+                }
+
+                // Cerrar el DataReader
+                reader.Close();
+
+            });
+
+            task.GetAwaiter().GetResult();
+
+            // Cerrar  la conexión a la base de datos
             connection.Close();
 
 

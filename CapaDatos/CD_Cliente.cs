@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Threading.Tasks;
 
 namespace CapaDatos
 {
@@ -24,38 +25,46 @@ namespace CapaDatos
             // Abrir la conexión a la base de datos
             connection.Open();//Dios Mio Santificado sea tu nombre esta mamada ya jala
 
-            // Ejecutar el comando y almacenar los resultados en un objeto DataReader
-            OracleDataReader reader = command.ExecuteReader();
+            var task = Task.Run(async () => {
 
-            while (reader.Read())
-            {
-                lista.Add(
-                    new MUEB_CLIENTE()
-                    {
-                        CLI_ID_PK = Convert.ToInt32(reader["CLI_ID_PK"]),
-                        CLI_TIPO_DOC = reader["CLI_TIPO_DOC"].ToString(),
-                        CLI_NO_DOC = reader["CLI_NO_DOC"].ToString(),
-                        CLI_NOMBRE = reader["CLI_NOMBRE"].ToString(),
-                        CLI_APELLIDO = reader["CLI_APELLIDO"].ToString(),
-                        CLI_TELEFONO_RES = reader["CLI_TELEFONO_RES"].ToString(),
-                        CLI_TELEFONO_CEL = reader["CLI_TELEFONO_CEL"].ToString(),
-                        CLI_DIRECCION = reader["CLI_DIRECCION"].ToString(),
-                        CLI_CIUDAD = reader["CLI_CIUDAD"].ToString(),
-                        CLI_DEPTO = reader["CLI_DEPTO"].ToString(),
-                        CLI_PAIS = reader["CLI_PAIS"].ToString(),
-                        CLI_PROFESION = reader["CLI_PROFESION"].ToString(),
-                        CLI_CORREO = reader["CLI_CORREO"].ToString(),
-                        CLI_CLAVE = reader["CLI_CLAVE"].ToString(),
-                        CLI_CONFIRMARCLAVE = reader["CLI_CONFIRMARCLAVE"].ToString(),
-                        CLI_REESTABLECER = Convert.ToBoolean(reader["CLI_REESTABLECER"].ToString())
+                // Ejecutar el comando y almacenar los resultados en un objeto DataReader
+                OracleDataReader reader = await command.ExecuteReaderAsync();
 
-                    }
+                while (await reader.ReadAsync())
+                {
+                    lista.Add(
+                        new MUEB_CLIENTE()
+                        {
+                            CLI_ID_PK = Convert.ToInt32(reader["CLI_ID_PK"]),
+                            CLI_TIPO_DOC = reader["CLI_TIPO_DOC"].ToString(),
+                            CLI_NO_DOC = reader["CLI_NO_DOC"].ToString(),
+                            CLI_NOMBRE = reader["CLI_NOMBRE"].ToString(),
+                            CLI_APELLIDO = reader["CLI_APELLIDO"].ToString(),
+                            CLI_TELEFONO_RES = reader["CLI_TELEFONO_RES"].ToString(),
+                            CLI_TELEFONO_CEL = reader["CLI_TELEFONO_CEL"].ToString(),
+                            CLI_DIRECCION = reader["CLI_DIRECCION"].ToString(),
+                            CLI_CIUDAD = reader["CLI_CIUDAD"].ToString(),
+                            CLI_DEPTO = reader["CLI_DEPTO"].ToString(),
+                            CLI_PAIS = reader["CLI_PAIS"].ToString(),
+                            CLI_PROFESION = reader["CLI_PROFESION"].ToString(),
+                            CLI_CORREO = reader["CLI_CORREO"].ToString(),
+                            CLI_CLAVE = reader["CLI_CLAVE"].ToString(),
+                            CLI_CONFIRMARCLAVE = reader["CLI_CONFIRMARCLAVE"].ToString(),
+                            CLI_REESTABLECER = Convert.ToBoolean(reader["CLI_REESTABLECER"].ToString())
 
-                    );
-            }
+                        }
 
-            // Cerrar el DataReader y la conexión a la base de datos
-            reader.Close();
+                        );
+                }
+
+                // Cerrar el DataReader
+                reader.Close();
+
+            });
+
+            task.GetAwaiter().GetResult();
+
+            // Cerrar la conexión a la base de datos
             connection.Close();
 
 

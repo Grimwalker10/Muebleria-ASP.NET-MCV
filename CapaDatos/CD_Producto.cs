@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Threading.Tasks;
 
 namespace CapaDatos
 {
@@ -26,40 +27,48 @@ namespace CapaDatos
             // Abrir la conexión a la base de datos
             connection.Open();//Dios Mio Santificado sea tu nombre esta mamada ya jala
 
-            // Ejecutar el comando y almacenar los resultados en un objeto DataReader
-            OracleDataReader reader = command.ExecuteReader();
+            var task = Task.Run(async () => {
 
-            while (reader.Read())
-            {
-                lista.Add(
-                    new MUEB_PRODUCTO()
-                    {
-                        PROD_ID_PK = Convert.ToInt32(reader["PROD_ID_PK"]),
-                        PROD_REFERENCIA = reader["PROD_REFERENCIA"].ToString(),
-                        PROD_NOMBRE = reader["PROD_NOMBRE"].ToString(),
-                        PROD_DESCRIPCION = reader["PROD_DESCRIPCION"].ToString(),
-                        PROD_CATEGORIA_FK = Convert.ToInt32(reader["PROD_CATEGORIA_FK"]),
-                        PROD_MATERIAL = reader["PROD_MATERIAL"].ToString(),
-                        PROD_ALTO = reader["PROD_ALTO"].ToString(),
-                        PROD_ANCHO = reader["PROD_ANCHO"].ToString(),
-                        PROD_PROFUNDIDAD = reader["PROD_PROFUNDIDAD"].ToString(),
-                        PROD_COLOR = reader["PROD_COLOR"].ToString(),
-                        PROD_PESO = reader["PROD_PESO"].ToString(),
-                        PROD_PROVEEDOR = Convert.ToInt32(reader["PROD_PROVEEDOR"]),
-                        PROD_REF_FOTO = reader["PROD_REF_FOTO"].ToString(),
-                        PROD_BASE64 = reader["PROD_BASE64"].ToString(),
-                        PROD_EXTENSION = reader["PROD_EXTENSION"].ToString(),
-                        PROD_NOMBRE_IMAGEN = reader["PROD_NOMBRE_IMAGEN"].ToString(),
-                        PROD_PRECIO = Convert.ToInt32(reader["PROD_PRECIO"]),
-                        PROD_UNIDADES = Convert.ToInt32(reader["PROD_UNIDADES"])
+                // Ejecutar el comando y almacenar los resultados en un objeto DataReader
+                OracleDataReader reader = await command.ExecuteReaderAsync();
 
-                    }
+                while (await reader.ReadAsync())
+                {
+                    lista.Add(
+                        new MUEB_PRODUCTO()
+                        {
+                            PROD_ID_PK = Convert.ToInt32(reader["PROD_ID_PK"]),
+                            PROD_REFERENCIA = reader["PROD_REFERENCIA"].ToString(),
+                            PROD_NOMBRE = reader["PROD_NOMBRE"].ToString(),
+                            PROD_DESCRIPCION = reader["PROD_DESCRIPCION"].ToString(),
+                            PROD_CATEGORIA_FK = Convert.ToInt32(reader["PROD_CATEGORIA_FK"]),
+                            PROD_MATERIAL = reader["PROD_MATERIAL"].ToString(),
+                            PROD_ALTO = reader["PROD_ALTO"].ToString(),
+                            PROD_ANCHO = reader["PROD_ANCHO"].ToString(),
+                            PROD_PROFUNDIDAD = reader["PROD_PROFUNDIDAD"].ToString(),
+                            PROD_COLOR = reader["PROD_COLOR"].ToString(),
+                            PROD_PESO = reader["PROD_PESO"].ToString(),
+                            PROD_PROVEEDOR = Convert.ToInt32(reader["PROD_PROVEEDOR"]),
+                            PROD_REF_FOTO = reader["PROD_REF_FOTO"].ToString(),
+                            PROD_BASE64 = reader["PROD_BASE64"].ToString(),
+                            PROD_EXTENSION = reader["PROD_EXTENSION"].ToString(),
+                            PROD_NOMBRE_IMAGEN = reader["PROD_NOMBRE_IMAGEN"].ToString(),
+                            PROD_PRECIO = Convert.ToInt32(reader["PROD_PRECIO"]),
+                            PROD_UNIDADES = Convert.ToInt32(reader["PROD_UNIDADES"])
 
-                    );
-            }
+                        }
 
-            // Cerrar el DataReader y la conexión a la base de datos
-            reader.Close();
+                        );
+                }
+
+                // Cerrar el DataReader
+                reader.Close();
+
+            });
+
+            task.GetAwaiter().GetResult();
+
+            // Cerrar la conexión a la base de datos
             connection.Close();
 
 

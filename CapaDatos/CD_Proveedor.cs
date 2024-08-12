@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CapaDatos
 {
@@ -25,29 +26,37 @@ namespace CapaDatos
             // Abrir la conexión a la base de datos
             connection.Open();//Dios Mio Santificado sea tu nombre esta mamada ya jala
 
-            // Ejecutar el comando y almacenar los resultados en un objeto DataReader
-            OracleDataReader reader = command.ExecuteReader();
+            var task = Task.Run(async () => {
 
-            while (reader.Read())
-            {
-                lista.Add(
-                    new MUEB_PROVEEDOR()
-                    {
-                        PROV_ID = Convert.ToInt32(reader["PROV_ID"]),
-                        PROV_NOMBRE = reader["PROV_NOMBRE"].ToString(),
-                        PROV_TELEFONO_CEL = reader["PROV_TELEFONO_CEL"].ToString(),
-                        PROV_DIRECCION = reader["PROV_DIRECCION"].ToString(),
-                        PROV_CIUDAD = reader["PROV_CIUDAD"].ToString(),
-                        PROV_DEPTO = reader["PROV_DEPTO"].ToString(),
-                        PROV_PAIS = reader["PROV_PAIS"].ToString()
+                // Ejecutar el comando y almacenar los resultados en un objeto DataReader
+                OracleDataReader reader = await command.ExecuteReaderAsync();
 
-                    }
+                while (await reader.ReadAsync())
+                {
+                    lista.Add(
+                        new MUEB_PROVEEDOR()
+                        {
+                            PROV_ID = Convert.ToInt32(reader["PROV_ID"]),
+                            PROV_NOMBRE = reader["PROV_NOMBRE"].ToString(),
+                            PROV_TELEFONO_CEL = reader["PROV_TELEFONO_CEL"].ToString(),
+                            PROV_DIRECCION = reader["PROV_DIRECCION"].ToString(),
+                            PROV_CIUDAD = reader["PROV_CIUDAD"].ToString(),
+                            PROV_DEPTO = reader["PROV_DEPTO"].ToString(),
+                            PROV_PAIS = reader["PROV_PAIS"].ToString()
 
-                    );
-            }
+                        }
 
-            // Cerrar el DataReader y la conexión a la base de datos
-            reader.Close();
+                        );
+                }
+
+                // Cerrar el DataReader
+                reader.Close();
+
+            });
+
+            task.GetAwaiter().GetResult();
+
+            // Cerrar la conexión a la base de datos
             connection.Close();
 
 

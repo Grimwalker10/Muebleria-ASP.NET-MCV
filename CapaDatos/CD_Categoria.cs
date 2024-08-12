@@ -28,25 +28,33 @@ namespace CapaDatos
             // Abrir la conexión a la base de datos
             connection.Open();//Dios Mio Santificado sea tu nombre esta mamada ya jala
 
-            // Ejecutar el comando y almacenar los resultados en un objeto DataReader
-            OracleDataReader reader = command.ExecuteReader();
+            var task = Task.Run(async () => {
 
-            while (reader.Read())
-            {
-                lista.Add(
-                    new MUEB_CATEGORIA()
-                    {
-                        CAT_ID = Convert.ToInt32(reader["CAT_ID"]),
-                        CAT_NOMBRE = reader["CAT_NOMBRE"].ToString(),
-                        CAT_DESCRIPCION = reader["CAT_DESCRIPCION"].ToString()
+                // Ejecutar el comando y almacenar los resultados en un objeto DataReader
+                OracleDataReader reader = await command.ExecuteReaderAsync();
 
-                    }
+                while (await reader.ReadAsync())
+                {
+                    lista.Add(
+                        new MUEB_CATEGORIA()
+                        {
+                            CAT_ID = Convert.ToInt32(reader["CAT_ID"]),
+                            CAT_NOMBRE = reader["CAT_NOMBRE"].ToString(),
+                            CAT_DESCRIPCION = reader["CAT_DESCRIPCION"].ToString()
 
-                    );
-            }
+                        }
 
-            // Cerrar el DataReader y la conexión a la base de datos
-            reader.Close();
+                        );
+                }
+
+                // Cerrar el DataReader
+                reader.Close();
+
+            });
+
+            task.GetAwaiter().GetResult();
+
+            // Cerrar la conexión a la base de datos
             connection.Close();
 
 

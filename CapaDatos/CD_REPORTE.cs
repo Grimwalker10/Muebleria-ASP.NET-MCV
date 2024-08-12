@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Threading.Tasks;
 using CapaEntidad;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
@@ -44,28 +45,37 @@ namespace CapaDatos
 
                 connection.Open();
 
-                // Ejecutar el comando y almacenar los resultados en un objeto DataReader
-                OracleDataReader reader = command.ExecuteReader();
+                var task = Task.Run(async () => {
 
-                // Recorrer el cursor y obtener los datos
-                while (reader.Read())
-                {
-                    lista.Add(new MUEB_REPORTE()
+                    // Ejecutar el comando y almacenar los resultados en un objeto DataReader
+                    OracleDataReader reader = await command.ExecuteReaderAsync();
+
+                    // Recorrer el cursor y obtener los datos
+                    while (await reader.ReadAsync())
                     {
-                        FechaVenta = reader["FechaVenta"].ToString(),
-                        Cliente = reader["NombreCompleto"].ToString(),
-                        Producto = reader["PROD_NOMBRE"].ToString(),
-                        Precio = Convert.ToDecimal(reader["PROD_PRECIO"], new CultureInfo("es-PE")),
-                        Cantidad = Convert.ToInt32(reader["DETVEN_CANTIDAD"].ToString()),
-                        Total = Convert.ToDecimal(reader["DETVEN_TOTAL"], new CultureInfo("es-PE")),
-                        IdTransaccion = reader["VEN_ID_PK"].ToString()
+                        lista.Add(new MUEB_REPORTE()
+                        {
+                            FechaVenta = reader["FechaVenta"].ToString(),
+                            Cliente = reader["NombreCompleto"].ToString(),
+                            Producto = reader["PROD_NOMBRE"].ToString(),
+                            Precio = Convert.ToDecimal(reader["PROD_PRECIO"], new CultureInfo("es-PE")),
+                            Cantidad = Convert.ToInt32(reader["DETVEN_CANTIDAD"].ToString()),
+                            Total = Convert.ToDecimal(reader["DETVEN_TOTAL"], new CultureInfo("es-PE")),
+                            IdTransaccion = reader["VEN_ID_PK"].ToString()
 
-                    });
+                        });
 
-                }
+                    }
 
-                // Cerrar el reader y la conexión
-                reader.Close();
+                    // Cerrar el reader 
+                    reader.Close();
+
+                });
+
+                task.GetAwaiter().GetResult();
+
+
+                // Cerrar la conexión
                 connection.Close();
             }
 
